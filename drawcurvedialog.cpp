@@ -89,8 +89,14 @@ QCursor DrawCurveDialog::generatePenCursor(const QPen &p)
     QPen pen;
     pen.setWidth(1);
     pen.setColor(c);
+    painter.setBrush(Qt::SolidPattern);
     painter.setPen(pen);
     painter.drawEllipse(img.rect().adjusted(1, 1, -1, -1));
     QCursor cs(QPixmap::fromImage(img));
     return cs;
+}
+
+void DrawCurveDialog::on_toolButtonResetTransform_clicked()
+{
+    ui->widgetView->resetTransform();
 }

@@ -50,6 +50,9 @@ public :
 private:
     bool mIsLButtonOnPress;
     QPointF mLButtonScenePos;
+    bool mIsRButtonOnPress;
+    QPointF mRButtonScenePos;
+    QPoint mLButtonScreenPos;
     QPen mToolPen;
     QBrush mToolBrush;
     int mTool;

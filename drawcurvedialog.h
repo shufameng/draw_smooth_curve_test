@@ -27,6 +27,8 @@ private slots:
     void updateUI();
 
     QCursor generatePenCursor(const QPen &p);
+    void on_toolButtonResetTransform_clicked();
+
 private:
     Ui::DrawCurveDialog *ui;
 };

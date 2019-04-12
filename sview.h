@@ -19,6 +19,7 @@ public slots:
 
 protected:
     virtual void wheelEvent(QWheelEvent *e);
+
 };
 
 #endif // SVIEW_H
