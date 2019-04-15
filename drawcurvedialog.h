@@ -16,9 +16,9 @@ public:
     ~DrawCurveDialog();
 
 private slots:
-    void on_toolButtonLineGroup_clicked();
+    void on_toolButtonPen1_clicked();
 
-    void on_toolButtonPath_clicked();
+    void on_toolButtonPen2_clicked();
 
     void on_toolButtonPenColor_clicked();
 
@@ -28,6 +28,12 @@ private slots:
 
     QCursor generatePenCursor(const QPen &p);
     void on_toolButtonResetTransform_clicked();
+
+    void on_toolButton_clicked();
+
+    void on_toolButtonPen3_clicked();
+
+    void on_toolButtonPen4_clicked();
 
 private:
     Ui::DrawCurveDialog *ui;

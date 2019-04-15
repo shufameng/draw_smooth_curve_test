@@ -1,11 +1,14 @@
 #include "sview.h"
 #include "sscene.h"
 #include <QWheelEvent>
+#include <QMouseEvent>
+#include <QTouchEvent>
 
 SView::SView(QWidget *parent) :
     QGraphicsView(parent)
 {
     viewport()->setAttribute(Qt::WA_AcceptTouchEvents);
+    mTool = Pen;
     //setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 }
 
@@ -48,3 +51,85 @@ void SView::wheelEvent(QWheelEvent *e)
         scale(1/1.1, 1/1.1);
     }
 }
+
+void SView::mousePressEvent(QMouseEvent *e)
+{
+    if (e->button() & Qt::LeftButton)
+    {
+        mIsLBtnOnPress = true;
+        mLBtnPos = e->pos();
+        if (mTool == Pen)
+        {
+
+        }
+    }
+    else if (e->button() & Qt::RightButton)
+    {
+        mIsRBtnOnPress = true;
+        mRBtnPos = e->pos();
+    }
+    return QGraphicsView::mousePressEvent(e);
+}
+
+void SView::mouseMoveEvent(QMouseEvent *e)
+{
+    if (mIsLBtnOnPress)
+    {
+        if (mTool == Pen)
+        {
+
+        }
+    }
+    else if (mIsRBtnOnPress)
+    {
+
+    }
+    return QGraphicsView::mouseMoveEvent(e);
+}
+
+void SView::mouseReleaseEvent(QMouseEvent *e)
+{
+    if (e->button() & Qt::LeftButton)
+    {
+        mIsLBtnOnPress = false;
+        if (mTool == Pen)
+        {
+
+        }
+    }
+    else if (e->button() & Qt::RightButton)
+    {
+        mIsRBtnOnPress = false;
+    }
+    return QGraphicsView::mouseReleaseEvent(e);
+}
+
+bool SView::viewportEvent(QEvent *e)
+{
+    switch (e->type())
+    {
+    case QEvent::TouchBegin:
+    case QEvent::TouchUpdate:
+    case QEvent::TouchEnd:
+    case QEvent::TouchCancel:
+        return true;
+        break;
+    default:
+        break;
+    }
+    return QGraphicsView::viewportEvent(e);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

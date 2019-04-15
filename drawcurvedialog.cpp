@@ -16,12 +16,14 @@ DrawCurveDialog::DrawCurveDialog(QWidget *parent) :
     p.setJoinStyle(Qt::RoundJoin);
     p.setCapStyle(Qt::RoundCap);
     p.setColor(Qt::red);
-    p.setWidth(10);
+    p.setWidth(20);
     dynamic_cast<SScene*>(ui->widgetView->scene())->setToolPen(p);
 
     QButtonGroup *g = new QButtonGroup(this);
-    g->addButton(ui->toolButtonLineGroup);
-    g->addButton(ui->toolButtonPath);
+    g->addButton(ui->toolButtonPen1);
+    g->addButton(ui->toolButtonPen2);
+    g->addButton(ui->toolButtonPen3);
+    g->addButton(ui->toolButtonPen4);
 
     updateUI();
 }
@@ -31,14 +33,14 @@ DrawCurveDialog::~DrawCurveDialog()
     delete ui;
 }
 
-void DrawCurveDialog::on_toolButtonLineGroup_clicked()
+void DrawCurveDialog::on_toolButtonPen1_clicked()
 {
-    ui->widgetView->setSceneTool((int)SScene::Pen);
+    ui->widgetView->setSceneTool((int)SScene::Pen1);
 }
 
-void DrawCurveDialog::on_toolButtonPath_clicked()
+void DrawCurveDialog::on_toolButtonPen2_clicked()
 {
-    ui->widgetView->setSceneTool((int)SScene::PathPen);
+    ui->widgetView->setSceneTool((int)SScene::Pen2);
 }
 
 void DrawCurveDialog::on_toolButtonPenColor_clicked()
@@ -50,7 +52,7 @@ void DrawCurveDialog::on_toolButtonPenColor_clicked()
         p.setColor(c);
         ui->widgetView->setSceneToolPen(p);
         updateUI();
-        setCursor(generatePenCursor(p));
+        //setCursor(generatePenCursor(p));
     }
 }
 
@@ -61,7 +63,7 @@ void DrawCurveDialog::on_horizontalSliderPenWidth_valueChanged(int value)
     ui->widgetView->setSceneToolPen(p);
     updateUI();
 
-    setCursor(generatePenCursor(p));
+    //setCursor(generatePenCursor(p));
 }
 
 void DrawCurveDialog::updateUI()
@@ -89,7 +91,7 @@ QCursor DrawCurveDialog::generatePenCursor(const QPen &p)
     QPen pen;
     pen.setWidth(1);
     pen.setColor(c);
-    painter.setBrush(Qt::SolidPattern);
+    painter.setBrush(Qt::NoBrush);
     painter.setPen(pen);
     painter.drawEllipse(img.rect().adjusted(1, 1, -1, -1));
     QCursor cs(QPixmap::fromImage(img));
@@ -99,4 +101,19 @@ QCursor DrawCurveDialog::generatePenCursor(const QPen &p)
 void DrawCurveDialog::on_toolButtonResetTransform_clicked()
 {
     ui->widgetView->resetTransform();
+}
+
+void DrawCurveDialog::on_toolButton_clicked()
+{
+    ui->widgetView->scene()->clear();
+}
+
+void DrawCurveDialog::on_toolButtonPen3_clicked()
+{
+    ui->widgetView->setSceneTool((int)SScene::Pen3);
+}
+
+void DrawCurveDialog::on_toolButtonPen4_clicked()
+{
+    ui->widgetView->setSceneTool((int)SScene::Pen4);
 }

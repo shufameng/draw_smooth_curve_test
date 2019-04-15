@@ -18,13 +18,17 @@ SOURCES += main.cpp\
     sscene.cpp \
     linegroupitem.cpp \
     lineitem.cpp \
-    pathitem.cpp
+    pathitem.cpp \
+    linesitem.cpp \
+    pointitem.cpp
 
 HEADERS  += drawcurvedialog.h \
     sview.h \
     sscene.h \
     linegroupitem.h \
     lineitem.h \
-    pathitem.h
+    pathitem.h \
+    linesitem.h \
+    pointitem.h
 
 FORMS    += drawcurvedialog.ui

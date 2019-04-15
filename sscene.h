@@ -4,13 +4,15 @@
 #include <QGraphicsScene>
 #include <QPen>
 #include <QBrush>
+#include <QGraphicsPathItem>
 
+class LineItem;
 class LineGroupItem;
 class SScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    enum Tool { NoTool, Pen, PathPen, Eraser };
+    enum Tool { NoTool, Pen1, Pen2, Pen3, Pen4 };
 
     explicit SScene(QObject *parent = 0);
     virtual ~SScene();
@@ -47,6 +49,8 @@ public :
         mTool = t;
     }
 
+    void addLineItem(const QLineF &line);
+
 private:
     bool mIsLButtonOnPress;
     QPointF mLButtonScenePos;
@@ -57,6 +61,7 @@ private:
     QBrush mToolBrush;
     int mTool;
     LineGroupItem *mLastCreatedLineGroup;
+    QGraphicsPathItem *mLastCreatedPath;
 };
 
 #endif // SSCENE_H

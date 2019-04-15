@@ -17,9 +17,9 @@
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QToolButton" name="toolButtonLineGroup">
+      <widget class="QToolButton" name="toolButtonPen1">
        <property name="text">
-        <string>LineGroup</string>
+        <string>Pen1</string>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -27,9 +27,29 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButtonPath">
+      <widget class="QToolButton" name="toolButtonPen2">
        <property name="text">
-        <string>Path</string>
+        <string>Pen2</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="toolButtonPen3">
+       <property name="text">
+        <string>Pen3</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="toolButtonPen4">
+       <property name="text">
+        <string>Pen4</string>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -48,6 +68,13 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QToolButton" name="toolButton">
+       <property name="text">
+        <string>clean</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QToolButton" name="toolButtonResetTransform">

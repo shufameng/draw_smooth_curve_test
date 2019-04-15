@@ -17,6 +17,8 @@ public:
     void addToGroup(const QLineF &line);
     void removeFromGroup(LineItem *item);
 
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
     QPen pen() const
     {
         return mPen;
