@@ -14,6 +14,10 @@ public:
     QRectF boundingRect() const;
 
 
+    QPen pen() const
+    {
+        return mPen;
+    }
     void setPen(const QPen &p)
     {
         mPen = p;

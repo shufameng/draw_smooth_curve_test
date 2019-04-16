@@ -1,22 +1,21 @@
-#include "sharplineitem.h"
+#include "sharppathitem.h"
 #include <QPainter>
-#include <QDebug>
 
-SharpLineItem::SharpLineItem(QGraphicsItem *parent) :
-    LineItem(parent)
+SharpPathItem::SharpPathItem(QGraphicsItem *parent) :
+    PathItem(parent)
 {
     mMode = Shrink;
     mStartWidth = pen().widthF();
-    mMinWidth = pen().widthF();
     mMaxWidth = pen().widthF();
+    mMinWidth = pen().widthF();
 }
 
-void SharpLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void SharpPathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    mCurrentWidth  = mStartWidth;
+    mCurrentWidth = mStartWidth;
     qreal variantFactor = 0.98;
     painter->setRenderHint(QPainter::Antialiasing, true);
-    qreal percent = 1/line().length()/2;
+    qreal percent = 1/path().length()/2;
 
     for (qreal f = 0; f <= 1; f += percent)
     {
@@ -36,6 +35,6 @@ void SharpLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         QPen p = pen();
         p.setWidthF(mCurrentWidth);
         painter->setPen(p);
-        painter->drawPoint(line().pointAt(f));
+        painter->drawPoint(path().pointAtPercent(f));
     }
 }

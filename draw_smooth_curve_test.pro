@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     pathitem.cpp \
     linesitem.cpp \
     pointitem.cpp \
-    sharplineitem.cpp
+    sharplineitem.cpp \
+    sharppathitem.cpp
 
 HEADERS  += drawcurvedialog.h \
     sview.h \
@@ -32,6 +33,7 @@ HEADERS  += drawcurvedialog.h \
     pathitem.h \
     linesitem.h \
     pointitem.h \
-    sharplineitem.h
+    sharplineitem.h \
+    sharppathitem.h
 
 FORMS    += drawcurvedialog.ui

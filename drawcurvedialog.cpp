@@ -15,7 +15,7 @@ DrawCurveDialog::DrawCurveDialog(QWidget *parent) :
     QPen p;
     p.setJoinStyle(Qt::RoundJoin);
     p.setCapStyle(Qt::RoundCap);
-    p.setColor(Qt::red);
+    p.setColor(Qt::white);
     p.setWidth(6);
     dynamic_cast<SScene*>(ui->widgetView->scene())->setToolPen(p);
 

@@ -91,6 +91,11 @@ SScene::SScene(QObject *parent) :
     //b.setStyle(Qt::Dense2Pattern);
     //setBackgroundBrush(b);
 
+    QBrush b;
+    b.setStyle(Qt::SolidPattern);
+    b.setColor(Qt::black);
+    setBackgroundBrush(b);
+
 
     mPenMinLenghtBetweenPoints = 3;
     mPenMinWidth = 1.0;
