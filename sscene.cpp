@@ -119,6 +119,7 @@ void SScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         {
             mInputPoints.append(e->scenePos());
             mLastPenPoint = e->scenePos();
+            mLastCreatedPathPenWidth = mToolPen.widthF();
 
             PointItem *item = new PointItem;
             item->setPoint(e->scenePos());
@@ -181,13 +182,32 @@ void SScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
                 path.moveTo(mLastPenPoint);
 
                 QLineF line(mInputPoints.last(), e->scenePos());
-                qreal dist = line.length();qDebug() << dist;
+                qreal dist = line.length();
 
                 line.setLength(line.length()*0.5);
                 path.quadTo(mInputPoints.last(), line.p2());
 
                 mLastCreatedPath->setPath(path);
-                mLastCreatedPath->setPen(mToolPen);
+                QPen pen = mToolPen;
+
+                if (dist > 10)
+                {
+                    mLastCreatedPathPenWidth *= 0.98;
+                }
+                else
+                {
+                    mLastCreatedPathPenWidth /= 0.98;
+                }
+
+                if (mLastCreatedPathPenWidth > mToolPen.widthF())
+                    mLastCreatedPathPenWidth = mToolPen.widthF();
+                if (mLastCreatedPathPenWidth < 1.0)
+                    mLastCreatedPathPenWidth = 1.0;
+
+
+                pen.setWidthF(mLastCreatedPathPenWidth);
+                mLastCreatedPath->setPen(pen);
+
                 addItem(mLastCreatedPath);
 
                 mLastPenPoint = line.p2();
@@ -216,19 +236,21 @@ void SScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             QPainterPath path;
             path.moveTo(mLastPenPoint);
             path.lineTo(e->scenePos());
-            mLastCreatedPath->setPen(mToolPen);
+            QPen p = mToolPen;
+            p.setWidthF(mLastCreatedPathPenWidth);
+            mLastCreatedPath->setPen(p);
             mLastCreatedPath->setPath(path);
             addItem(mLastCreatedPath);
 
-            for (int i = 0; i < mInputPoints.size(); ++i)
-            {
-                PointItem *item = new PointItem;
-                item->setPoint(mInputPoints.at(i));
-                QPen p = mToolPen;
-                p.setColor(Qt::black);
-                item->setPen(p);
-                addItem(item);
-            }
+//            for (int i = 0; i < mInputPoints.size(); ++i)
+//            {
+//                PointItem *item = new PointItem;
+//                item->setPoint(mInputPoints.at(i));
+//                QPen p = mToolPen;
+//                p.setColor(Qt::black);
+//                item->setPen(p);
+//                addItem(item);
+//            }
             mInputPoints.clear();
         }
     }

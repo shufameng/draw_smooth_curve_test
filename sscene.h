@@ -67,6 +67,7 @@ private:
     QList<QPointF> mInputPoints;
     QPointF mLastPenPoint;
     PathItem *mLastCreatedPath;
+    qreal mLastCreatedPathPenWidth;
 };
 
 #endif // SSCENE_H
