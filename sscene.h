@@ -62,6 +62,7 @@ private:
     int mTool;
     LineGroupItem *mLastCreatedLineGroup;
     QGraphicsPathItem *mLastCreatedPath;
+    QList<QPointF> mPoints;
 };
 
 #endif // SSCENE_H

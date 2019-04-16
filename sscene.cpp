@@ -6,11 +6,76 @@
 #include <QScrollBar>
 #include <QPainterPathStroker>
 #include <QDebug>
+#include "pathitem.h"
 
 qreal getAngle(const QPointF &p, const QPointF &cp1, const QPointF &cp2)
 {
     qreal angle;
     return angle;
+}
+
+QPainterPath test_get_smooth_curve_by_points(const QList<QPointF> &points)
+{
+    QPainterPath path;
+    int pointsCount = points.size();
+    QPointF prev, current;
+    QPointF prevMidPoint;
+    qreal dist = 0;
+    qreal k = 0.5; // 直线所占比例
+
+    for (int i = 0; i < pointsCount; ++i)
+    {
+        current = points.at(i);
+
+        if (0 == i)
+        {
+            path.moveTo(current);
+            continue;
+        }
+        else if (1 == i)
+        {
+            prev = points.at(i - 1);
+            current = points.at(i);
+            QLineF line(prev, current);
+
+            dist += line.length();
+
+            if (dist < 2)
+            {
+                //path.lineTo(current);
+                //dist = 0;
+                continue;
+            }
+            else
+            {
+                line.setLength(line.length()*0.5);
+                prevMidPoint = line.p2();
+                path.lineTo(prevMidPoint);
+                dist = 0;
+            }
+        }
+        else
+        {
+            prev = points.at(i - 1);
+            QLineF line(prev, current);
+
+            dist += line.length();
+
+            if (dist < 2)
+            {
+                //path.lineTo(current);
+                continue;
+            }
+            else
+            {
+                line.setLength(line.length()*0.5);
+                path.quadTo(prev, line.p2());
+                dist = 0;
+            }
+        }
+    }
+
+   return path;
 }
 
 SScene::SScene(QObject *parent) :
@@ -24,6 +89,8 @@ SScene::SScene(QObject *parent) :
     //b.setColor(Qt::red);
     //b.setStyle(Qt::Dense2Pattern);
     //setBackgroundBrush(b);
+
+
 }
 
 SScene::~SScene()
@@ -50,6 +117,7 @@ void SScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
             break;
         case Pen4:
         {
+            mPoints.append(e->scenePos());
             PointItem *item = new PointItem;
             item->setPoint(e->scenePos());
             item->setPen(mToolPen);
@@ -103,10 +171,20 @@ void SScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         }
         else if (mTool == Pen4)
         {
-            PointItem *item = new PointItem;
-            item->setPoint(e->scenePos());
-            item->setPen(mToolPen);
-            addItem(item);
+            qreal len = QLineF(mLButtonScenePos, e->scenePos()).length();
+            if (len > 1)
+            {
+                mPoints.append(e->scenePos());
+
+                PointItem *item = new PointItem;
+                item->setPoint(e->scenePos());
+                QPen p = mToolPen;
+                p.setWidthF(p.widthF()/2);
+                item->setPen(p);
+                addItem(item);
+                mLButtonScenePos = e->scenePos();
+                mLButtonScreenPos = e->screenPos();
+            }
         }
     }
     else if (mIsRButtonOnPress)
@@ -121,6 +199,15 @@ void SScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     {
         mLastCreatedLineGroup = NULL;
         mIsLButtonOnPress = false;
+        if (Pen4 == mTool)
+        {
+            QPainterPath path = test_get_smooth_curve_by_points(mPoints);
+            PathItem *item = new PathItem;
+            item->setPen(mToolPen);
+            item->setPath(path);
+            addItem(item);
+            mPoints.clear();
+        }
     }
     else if (e->button() & Qt::RightButton)
     {

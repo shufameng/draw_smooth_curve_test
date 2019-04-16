@@ -39,7 +39,7 @@ QRectF LineItem::boundingRect() const
 }
 
 void LineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{qDebug() << "LineItem::paint";
+{//qDebug() << "LineItem::paint";
     painter->setRenderHints(QPainter::Antialiasing);
     painter->setPen(mPen);
     painter->setBrush(mBrush);
