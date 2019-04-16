@@ -8,6 +8,7 @@
 
 class LineItem;
 class LineGroupItem;
+class PathItem;
 class SScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -61,8 +62,11 @@ private:
     QBrush mToolBrush;
     int mTool;
     LineGroupItem *mLastCreatedLineGroup;
-    QGraphicsPathItem *mLastCreatedPath;
-    QList<QPointF> mPoints;
+    //QGraphicsPathItem *mLastCreatedPath;
+
+    QList<QPointF> mInputPoints;
+    QPointF mLastPenPoint;
+    PathItem *mLastCreatedPath;
 };
 
 #endif // SSCENE_H
