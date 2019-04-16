@@ -68,6 +68,12 @@ private:
     QPointF mLastPenPoint;
     PathItem *mLastCreatedPath;
     qreal mLastCreatedPathPenWidth;
+
+    qreal mPenVariantFactor;
+    qreal mPenMinWidth;
+    qreal mPenMinLenghtBetweenPoints;
+    qreal mPenExpandLength;
+    qreal mPenShrinkLength;
 };
 
 #endif // SSCENE_H

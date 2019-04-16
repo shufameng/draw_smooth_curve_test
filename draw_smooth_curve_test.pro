@@ -12,6 +12,7 @@ TARGET = draw_smooth_curve_test
 TEMPLATE = app
 
 
+
 SOURCES += main.cpp\
         drawcurvedialog.cpp \
     sview.cpp \
@@ -20,7 +21,8 @@ SOURCES += main.cpp\
     lineitem.cpp \
     pathitem.cpp \
     linesitem.cpp \
-    pointitem.cpp
+    pointitem.cpp \
+    sharplineitem.cpp
 
 HEADERS  += drawcurvedialog.h \
     sview.h \
@@ -29,6 +31,7 @@ HEADERS  += drawcurvedialog.h \
     lineitem.h \
     pathitem.h \
     linesitem.h \
-    pointitem.h
+    pointitem.h \
+    sharplineitem.h
 
 FORMS    += drawcurvedialog.ui

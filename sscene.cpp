@@ -7,6 +7,7 @@
 #include <QPainterPathStroker>
 #include <QDebug>
 #include "pathitem.h"
+#include "sharplineitem.h"
 
 qreal getAngle(const QPointF &p, const QPointF &cp1, const QPointF &cp2)
 {
@@ -91,6 +92,11 @@ SScene::SScene(QObject *parent) :
     //setBackgroundBrush(b);
 
 
+    mPenMinLenghtBetweenPoints = 3;
+    mPenMinWidth = 1.0;
+    mPenVariantFactor = 0.95;
+    mPenExpandLength = 10;
+    mPenShrinkLength = 6;
 }
 
 SScene::~SScene()
@@ -181,22 +187,22 @@ void SScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
                 QPainterPath path;
                 path.moveTo(mLastPenPoint);
 
-                QLineF line(mInputPoints.last(), e->scenePos());
+                QLineF line(mLButtonScenePos, e->scenePos());
                 qreal dist = line.length();
 
                 line.setLength(line.length()*0.5);
                 path.quadTo(mInputPoints.last(), line.p2());
 
                 mLastCreatedPath->setPath(path);
-                QPen pen = mToolPen;
 
-                if (dist > 10)
+
+                if (QLineF(e->lastScreenPos(), e->screenPos()).length() > 10)
                 {
-                    mLastCreatedPathPenWidth *= 0.98;
+                    mLastCreatedPathPenWidth *= 0.95;
                 }
                 else
                 {
-                    mLastCreatedPathPenWidth /= 0.98;
+                    mLastCreatedPathPenWidth /= 0.95;
                 }
 
                 if (mLastCreatedPathPenWidth > mToolPen.widthF())
@@ -205,6 +211,7 @@ void SScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
                     mLastCreatedPathPenWidth = 1.0;
 
 
+                QPen pen = mToolPen;
                 pen.setWidthF(mLastCreatedPathPenWidth);
                 mLastCreatedPath->setPen(pen);
 
@@ -232,15 +239,24 @@ void SScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         mIsLButtonOnPress = false;
         if (Pen4 == mTool)
         {
-            mLastCreatedPath = new PathItem;
-            QPainterPath path;
-            path.moveTo(mLastPenPoint);
-            path.lineTo(e->scenePos());
-            QPen p = mToolPen;
-            p.setWidthF(mLastCreatedPathPenWidth);
-            mLastCreatedPath->setPen(p);
-            mLastCreatedPath->setPath(path);
-            addItem(mLastCreatedPath);
+            SharpLineItem *item = new SharpLineItem;
+            item->setLine(mLastPenPoint, e->scenePos());
+            item->setPen(mToolPen);
+            item->setStartWidth(mLastCreatedPathPenWidth);
+            item->setMaxWidth(mToolPen.widthF());
+            item->setMinWidth(1.0);
+            item->setVariantMode(SharpLineItem::Shrink);
+            addItem(item);
+
+//            mLastCreatedPath = new PathItem;
+//            QPainterPath path;
+//            path.moveTo(mLastPenPoint);
+//            path.lineTo(e->scenePos());
+//            QPen p = mToolPen;
+//            p.setWidthF(mLastCreatedPathPenWidth);
+//            mLastCreatedPath->setPen(p);
+//            mLastCreatedPath->setPath(path);
+//            addItem(mLastCreatedPath);
 
 //            for (int i = 0; i < mInputPoints.size(); ++i)
 //            {
