@@ -216,7 +216,7 @@ void SScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             QPainterPath path;
             path.moveTo(mLastPenPoint);
             qreal len = QLineF(mLButtonScenePos, e->scenePos()).length();
-            if (len > mToolPen.widthF() && len > 1)
+            if (len > mToolPen.widthF()/100 && len > 1)
             {
                 QPainterPath path = mLastCreatedPath->path();
 
@@ -308,12 +308,20 @@ void SScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         {
             QPainterPath path = mLastCreatedPath->path();
             QPainterPathStroker s(mToolPen);
-            s.setWidth(mToolPen.widthF());
+            s.setWidth(mToolPen.widthF() - 1);
             QPainterPath pathOutLine = s.createStroke(path);
             mLastCreatedPath->setPath(pathOutLine);
-            QPen p = mToolPen;
-            p.setWidthF(0);
+            QColor c = mToolPen.color();
+            c.setAlpha(10);
+            QPen p;
+            p.setStyle(Qt::SolidLine);
+            p.setColor(c);
+            p.setWidthF(0.5);
             mLastCreatedPath->setPen(p);
+            QBrush b;
+            b.setStyle(Qt::SolidPattern);
+            b.setColor(mToolPen.color());
+            mLastCreatedPath->setBrush(b);
         }
         if (Pen4 == mTool)
         {

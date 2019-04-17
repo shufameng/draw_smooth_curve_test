@@ -24,6 +24,16 @@ public:
         update();
     }
 
+    QBrush brush() const
+    {
+        return mBrush;
+    }
+    void setBrush(const QBrush &b)
+    {
+        mBrush = b;
+        update();
+    }
+
     void setPath(const QPainterPath &p)
     {
         prepareGeometryChange();

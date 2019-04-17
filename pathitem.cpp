@@ -11,6 +11,7 @@ void PathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 {
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->setPen(mPen);
+    painter->setBrush(mBrush);
     painter->drawPath(mPath);
 }
 
