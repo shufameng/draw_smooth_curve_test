@@ -18,7 +18,7 @@ public:
     void setStartWidth(qreal w)
     {
         mStartWidth = w;
-        udpate();
+        update();
     }
 
     void setVMode(VMode mode)

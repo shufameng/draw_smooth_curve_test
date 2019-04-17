@@ -8,6 +8,7 @@
 #include <QDebug>
 #include "pathitem.h"
 #include "sharplineitem.h"
+#include "sharppathitem.h"
 
 qreal getAngle(const QPointF &p, const QPointF &cp1, const QPointF &cp2)
 {
@@ -91,10 +92,25 @@ SScene::SScene(QObject *parent) :
     //b.setStyle(Qt::Dense2Pattern);
     //setBackgroundBrush(b);
 
+//    QPainterPath path;
+//    path.moveTo(600, 600);
+//    path.quadTo(900, 900, 1000, 600);
+//    SharpPathItem *item = new SharpPathItem;
+//    item->setPath(path);
+//    item->setStartWidth(20);
+//    QPen p;
+//    p.setJoinStyle(Qt::RoundJoin);
+//    p.setCapStyle(Qt::RoundCap);
+//    p.setColor(Qt::white);
+//    item->setPen(p);
+//    addItem(item);
+
     QBrush b;
     b.setStyle(Qt::SolidPattern);
     b.setColor(Qt::black);
     setBackgroundBrush(b);
+
+
 
 
     mPenMinLenghtBetweenPoints = 3;
@@ -198,22 +214,32 @@ void SScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
                 line.setLength(line.length()*0.5);
                 path.quadTo(mInputPoints.last(), line.p2());
 
+//                QPen p;
+//                p.setStyle(Qt::SolidLine);
+//                p.setWidthF(mToolPen.widthF());
+//                p.setColor(Qt::red);
+//                QPainterPathStroker stk(p);
+//                stk.setCapStyle(Qt::RoundCap);
+//                stk.setJoinStyle(Qt::RoundJoin);
+
+//                stk.setCurveThreshold(0.1);
+//                mLastCreatedPath->setPath(stk.createStroke(path));
                 mLastCreatedPath->setPath(path);
 
 
                 if (QLineF(e->lastScreenPos(), e->screenPos()).length() > 10)
                 {
-                    mLastCreatedPathPenWidth *= 0.95;
+                    mLastCreatedPathPenWidth -= 0.2;
                 }
                 else
                 {
-                    mLastCreatedPathPenWidth /= 0.95;
+                    mLastCreatedPathPenWidth += 0.2;
                 }
 
                 if (mLastCreatedPathPenWidth > mToolPen.widthF())
                     mLastCreatedPathPenWidth = mToolPen.widthF();
-                if (mLastCreatedPathPenWidth < 1.0)
-                    mLastCreatedPathPenWidth = 1.0;
+                if (mLastCreatedPathPenWidth < mToolPen.widthF()/2)
+                    mLastCreatedPathPenWidth = mToolPen.widthF()/2;
 
 
                 QPen pen = mToolPen;
@@ -244,13 +270,11 @@ void SScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         mIsLButtonOnPress = false;
         if (Pen4 == mTool)
         {
-            SharpLineItem *item = new SharpLineItem;
+            LineItem *item = new LineItem;
             item->setLine(mLastPenPoint, e->scenePos());
-            item->setPen(mToolPen);
-            item->setStartWidth(mLastCreatedPathPenWidth);
-            item->setMaxWidth(mToolPen.widthF());
-            item->setMinWidth(1.0);
-            item->setVariantMode(SharpLineItem::Shrink);
+            QPen p = mToolPen;
+            p.setWidthF(mLastCreatedPathPenWidth);
+            item->setPen(p);
             addItem(item);
 
 //            mLastCreatedPath = new PathItem;
