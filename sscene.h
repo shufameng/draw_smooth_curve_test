@@ -66,7 +66,8 @@ private:
 
     QList<QPointF> mInputPoints;
     QPointF mLastPenPoint;
-    PathItem *mLastCreatedPath;
+    PathItem *mLastCreatedPathItem;
+    QPainterPath mLastCreatedPath;
     qreal mLastCreatedPathPenWidth;
 
     qreal mPenVariantFactor;

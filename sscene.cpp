@@ -16,7 +16,7 @@ qreal getAngle(const QPointF &p, const QPointF &cp1, const QPointF &cp2)
     return angle;
 }
 
-QPainterPath test_get_smooth_curve_by_points(const QList<QPointF> &points)
+QPainterPath test_get_smooth_curve_by_points(const QList<QPointF> &points, qreal minDist)
 {
     QPainterPath path;
     int pointsCount = points.size();
@@ -42,7 +42,7 @@ QPainterPath test_get_smooth_curve_by_points(const QList<QPointF> &points)
 
             dist += line.length();
 
-            if (dist < 2)
+            if (dist < minDist)
             {
                 //path.lineTo(current);
                 //dist = 0;
@@ -135,10 +135,20 @@ void SScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         switch (mTool)
         {
         case Pen1:
+        {
+            mInputPoints.clear();
+            mInputPoints.append(e->scenePos());
+            mLastCreatedPath = QPainterPath();
+            mLastCreatedPath.moveTo(e->scenePos());
+            mLastCreatedPathItem = new PathItem;
+            mLastCreatedPathItem->setPath(mLastCreatedPath);
+            mLastCreatedPathItem->setPen(mToolPen);
+            addItem(mLastCreatedPathItem);
+        }
+            break;
         case Pen2:
         {
-            mLastCreatedLineGroup = new LineGroupItem;
-            addItem(mLastCreatedLineGroup);
+
         }
             break;
 
@@ -150,10 +160,10 @@ void SScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
             QPainterPath path;
             path.moveTo(mLastPenPoint);
-            mLastCreatedPath = new PathItem;
-            mLastCreatedPath->setPath(path);
-            mLastCreatedPath->setPen(mToolPen);
-            addItem(mLastCreatedPath);
+            mLastCreatedPathItem = new PathItem;
+            mLastCreatedPathItem->setPath(path);
+            mLastCreatedPathItem->setPen(mToolPen);
+            addItem(mLastCreatedPathItem);
 //            PointItem *item = new PointItem;
 //            item->setPoint(e->scenePos());
 //            item->setPen(mToolPen);
@@ -189,27 +199,13 @@ void SScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
     {
         if (mTool == Pen1)
         {
-            qreal len = QLineF(mLButtonScenePos, e->scenePos()).length();
-            if (len > mToolPen.widthF())
-            {
-                if (mLButtonScenePos != e->lastScenePos())
-                {
-                    addLineItem(QLineF(mLButtonScenePos, e->lastScenePos()));
-                }
-                addLineItem(QLineF(e->lastScenePos(), e->scenePos()));
-                mLButtonScenePos = e->scenePos();
-                mLButtonScreenPos = e->screenPos();
-            }
+            mInputPoints.append(e->scenePos());
+            mLastCreatedPath.lineTo(e->scenePos());
+            mLastCreatedPathItem->setPath(mLastCreatedPath);
         }
         else if (mTool == Pen2)
         {
-            qreal len = QLineF(mLButtonScenePos, e->scenePos()).length();
-            if (len > mToolPen.widthF())
-            {
-                addLineItem(QLineF(mLButtonScenePos, e->scenePos()));
-                mLButtonScenePos = e->scenePos();
-                mLButtonScreenPos = e->screenPos();
-            }
+
         }
         else if (mTool == Pen3)
         {
@@ -218,14 +214,14 @@ void SScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             qreal len = QLineF(mLButtonScenePos, e->scenePos()).length();
             if (len > mToolPen.widthF()/100 && len > 1)
             {
-                QPainterPath path = mLastCreatedPath->path();
+                QPainterPath path = mLastCreatedPathItem->path();
 
                 QLineF line(mLButtonScenePos, e->scenePos());
                 qreal dist = line.length();
 
                 line.setLength(line.length()*0.5);
                 path.quadTo(mInputPoints.last(), line.p2());
-                mLastCreatedPath->setPath(path);
+                mLastCreatedPathItem->setPath(path);
 
                 mLastPenPoint = line.p2();
 
@@ -238,9 +234,9 @@ void SScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         else if (mTool == Pen4)
         {
             qreal len = QLineF(mLButtonScenePos, e->scenePos()).length();
-            if (len > mToolPen.widthF()*2 && len > 1)
+            if (len > mToolPen.widthF()*3 && len > 1)
             {
-                mLastCreatedPath = new PathItem;
+                mLastCreatedPathItem = new PathItem;
                 QPainterPath path;
                 path.moveTo(mLastPenPoint);
 
@@ -260,7 +256,7 @@ void SScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 
 //                stk.setCurveThreshold(0.1);
 //                mLastCreatedPath->setPath(stk.createStroke(path));
-                mLastCreatedPath->setPath(path);
+                mLastCreatedPathItem->setPath(path);
 
 
                 if (QLineF(e->lastScreenPos(), e->screenPos()).length() > 10)
@@ -280,9 +276,9 @@ void SScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 
                 QPen pen = mToolPen;
                 pen.setWidthF(mLastCreatedPathPenWidth);
-                mLastCreatedPath->setPen(pen);
+                mLastCreatedPathItem->setPen(pen);
 
-                addItem(mLastCreatedPath);
+                addItem(mLastCreatedPathItem);
 
                 mLastPenPoint = line.p2();
 
@@ -304,26 +300,36 @@ void SScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     {
         mLastCreatedLineGroup = NULL;
         mIsLButtonOnPress = false;
-        if (Pen3 == mTool)
+        if (Pen1 == mTool)
         {
-            QPainterPath path = mLastCreatedPath->path();
+            QPainterPath path = test_get_smooth_curve_by_points(mInputPoints, mToolPen.widthF()*4);
+            mLastCreatedPathItem->setPath(path);
+        }
+        else if (Pen2 == mTool)
+        {
+
+        }
+        else if (Pen3 == mTool)
+        {
+            QPainterPath path = mLastCreatedPathItem->path();
             QPainterPathStroker s(mToolPen);
-            s.setWidth(mToolPen.widthF() - 1);
+            s.setWidth(mToolPen.widthF());
+            s.setCurveThreshold(0.01);
             QPainterPath pathOutLine = s.createStroke(path);
-            mLastCreatedPath->setPath(pathOutLine);
+            mLastCreatedPathItem->setPath(pathOutLine);
             QColor c = mToolPen.color();
-            c.setAlpha(10);
+            c.setAlpha(100);
             QPen p;
-            p.setStyle(Qt::SolidLine);
-            p.setColor(c);
-            p.setWidthF(0.5);
-            mLastCreatedPath->setPen(p);
+            p.setStyle(Qt::NoPen);
+            p.setColor(Qt::red);
+            p.setWidthF(1);
+            mLastCreatedPathItem->setPen(p);
             QBrush b;
             b.setStyle(Qt::SolidPattern);
             b.setColor(mToolPen.color());
-            mLastCreatedPath->setBrush(b);
+            mLastCreatedPathItem->setBrush(b);
         }
-        if (Pen4 == mTool)
+        else if (Pen4 == mTool)
         {
             SharpLineItem *item = new SharpLineItem;
             item->setLine(mLastPenPoint, e->scenePos());
