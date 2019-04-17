@@ -238,7 +238,7 @@ void SScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         else if (mTool == Pen4)
         {
             qreal len = QLineF(mLButtonScenePos, e->scenePos()).length();
-            if (len > mToolPen.widthF() && len > 1)
+            if (len > mToolPen.widthF()*2 && len > 1)
             {
                 mLastCreatedPath = new PathItem;
                 QPainterPath path;
@@ -325,7 +325,7 @@ void SScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         }
         if (Pen4 == mTool)
         {
-            LineItem *item = new LineItem;
+            SharpLineItem *item = new SharpLineItem;
             item->setLine(mLastPenPoint, e->scenePos());
             QPen p = mToolPen;
             p.setWidthF(mLastCreatedPathPenWidth);

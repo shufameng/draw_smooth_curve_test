@@ -5,37 +5,30 @@
 SharpLineItem::SharpLineItem(QGraphicsItem *parent) :
     LineItem(parent)
 {
-    mMode = Shrink;
-    mStartWidth = pen().widthF();
-    mMinWidth = pen().widthF();
-    mMaxWidth = pen().widthF();
 }
 
 void SharpLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    mCurrentWidth  = mStartWidth;
-    qreal variantFactor = 0.98;
     painter->setRenderHint(QPainter::Antialiasing, true);
-    qreal percent = 1/line().length()/2;
+    mCurrentWidth = pen().widthF();
+    qreal percent = 0.1;
+    QLineF li;
 
-    for (qreal f = 0; f <= 1; f += percent)
+    for (qreal f = 0; f + percent <= 1; f += percent)
     {
-        if (mMode == Expand)
+        li.setPoints(line().pointAt(f), line().pointAt(f + percent));
+
+        if (mCurrentWidth > 1)
         {
-            mCurrentWidth /= variantFactor;
-            if (mCurrentWidth > mMaxWidth)
-                mCurrentWidth = mMaxWidth;
+            mCurrentWidth *= 0.97;
+            if (mCurrentWidth < 1)
+                mCurrentWidth = 1;
         }
-        else if (mMode == Shrink)
-        {
-            mCurrentWidth *= variantFactor;
-            if (mCurrentWidth < mMinWidth)
-                mCurrentWidth = mMinWidth;
-        }
+
 
         QPen p = pen();
         p.setWidthF(mCurrentWidth);
         painter->setPen(p);
-        painter->drawPoint(line().pointAt(f));
+        painter->drawLine(li);
     }
 }
