@@ -1,5 +1,6 @@
 #include "pathitem.h"
 #include <QPainter>
+#include <QDebug>
 
 PathItem::PathItem(QGraphicsItem *parent) :
     QGraphicsItem(parent)
@@ -8,7 +9,7 @@ PathItem::PathItem(QGraphicsItem *parent) :
 }
 
 void PathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
+{//qDebug() << "PathItem::paint";
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->setPen(mPen);
     painter->setBrush(mBrush);

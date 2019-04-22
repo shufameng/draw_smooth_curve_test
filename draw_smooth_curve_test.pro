@@ -13,6 +13,7 @@ TEMPLATE = app
 
 
 
+
 SOURCES += main.cpp\
         drawcurvedialog.cpp \
     sview.cpp \
@@ -23,7 +24,11 @@ SOURCES += main.cpp\
     linesitem.cpp \
     pointitem.cpp \
     sharplineitem.cpp \
-    sharppathitem.cpp
+    sharppathitem.cpp \
+    smoothlineitem.cpp \
+    basicdrawitem.cpp \
+    glwidget.cpp \
+    polygonitem.cpp
 
 HEADERS  += drawcurvedialog.h \
     sview.h \
@@ -34,6 +39,10 @@ HEADERS  += drawcurvedialog.h \
     linesitem.h \
     pointitem.h \
     sharplineitem.h \
-    sharppathitem.h
+    sharppathitem.h \
+    smoothlineitem.h \
+    basicdrawitem.h \
+    glwidget.h \
+    polygonitem.h
 
 FORMS    += drawcurvedialog.ui

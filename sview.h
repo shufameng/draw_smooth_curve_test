@@ -3,6 +3,7 @@
 
 #include <QGraphicsView>
 
+class GLWidget;
 class SScene;
 class SView : public QGraphicsView
 {
@@ -26,12 +27,17 @@ protected:
     virtual void mouseReleaseEvent(QMouseEvent *e);
     virtual bool viewportEvent(QEvent *e);
 
+    virtual void paintEvent(QPaintEvent *e);
+    virtual void resizeEvent(QResizeEvent *e);
+
 private:
     Tool mTool;
     bool mIsLBtnOnPress;
     QPoint mLBtnPos;
     bool mIsRBtnOnPress;
     QPoint mRBtnPos;
+
+    GLWidget *mGLViewport;
 };
 
 #endif // SVIEW_H

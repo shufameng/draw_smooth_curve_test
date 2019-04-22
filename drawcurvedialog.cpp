@@ -10,13 +10,14 @@ DrawCurveDialog::DrawCurveDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     resize(800, 600);
+    setWindowFlags(Qt::Window);
 
     ui->widgetView->setScene(new SScene(this));
     QPen p;
-    p.setJoinStyle(Qt::RoundJoin);
+    //p.setJoinStyle(Qt::RoundJoin);
     p.setCapStyle(Qt::RoundCap);
-    p.setColor(Qt::white);
-    p.setWidth(6);
+    p.setColor(Qt::red);
+    p.setWidth(4);
     dynamic_cast<SScene*>(ui->widgetView->scene())->setToolPen(p);
 
     QButtonGroup *g = new QButtonGroup(this);

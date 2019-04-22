@@ -70,11 +70,17 @@ private:
     QPainterPath mLastCreatedPath;
     qreal mLastCreatedPathPenWidth;
 
+    QList<PathItem*> mLastCreatedPathItems;
+    QList<QGraphicsItem*> mLastCreatedPathItemsDummy;
+
     qreal mPenVariantFactor;
     qreal mPenMinWidth;
     qreal mPenMinLenghtBetweenPoints;
     qreal mPenExpandLength;
     qreal mPenShrinkLength;
+
+    QList<QPolygonF> mPolys;
+    QList<LineItem*> mLineItems;
 };
 
 #endif // SSCENE_H

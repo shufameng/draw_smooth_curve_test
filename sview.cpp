@@ -3,6 +3,8 @@
 #include <QWheelEvent>
 #include <QMouseEvent>
 #include <QTouchEvent>
+#include "glwidget.h"
+#include <QDebug>
 
 SView::SView(QWidget *parent) :
     QGraphicsView(parent)
@@ -10,6 +12,16 @@ SView::SView(QWidget *parent) :
     viewport()->setAttribute(Qt::WA_AcceptTouchEvents);
     mTool = Pen;
     //setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+
+    //setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+
+    setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    setOptimizationFlags(QGraphicsView::DontSavePainterState);
+
+    mGLViewport = new GLWidget(this);
+    setViewport(mGLViewport);
+
+    //setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 }
 
 SView::~SView()
@@ -118,6 +130,19 @@ bool SView::viewportEvent(QEvent *e)
         break;
     }
     return QGraphicsView::viewportEvent(e);
+}
+
+void SView::paintEvent(QPaintEvent *e)
+{
+    qDebug() << "SView::paintEvent";
+    return QGraphicsView::paintEvent(e);
+}
+
+void SView::resizeEvent(QResizeEvent *e)
+{
+    qDebug() << "SView::resizeEvent";
+    viewport()->update();
+    return QGraphicsView::resizeEvent(e);
 }
 
 

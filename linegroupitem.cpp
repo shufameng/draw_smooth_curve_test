@@ -31,13 +31,18 @@ void LineGroupItem::removeFromGroup(LineItem *item)
     QGraphicsItemGroup::removeFromGroup(item);
 }
 
+void LineGroupItem::addToGroup(QGraphicsItem *item)
+{
+    QGraphicsItemGroup::addToGroup(item);
+}
+
 void LineGroupItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    qDebug() << "LineGroupItem::paint";
-    qint64 t1 = QDateTime::currentMSecsSinceEpoch();qDebug() << t1;
+    //qDebug() << "LineGroupItem::paint";
+    qint64 t1 = QDateTime::currentMSecsSinceEpoch();//qDebug() << t1;
     QGraphicsItemGroup::paint(painter, option, widget);
-    qint64 t2 = QDateTime::currentMSecsSinceEpoch();qDebug() << t2;
-    qDebug() << t2 - t1;
+    qint64 t2 = QDateTime::currentMSecsSinceEpoch();//qDebug() << t2;
+    //qDebug() << t2 - t1;
 }
 
 void LineGroupItem::setPen(const QPen &p)
